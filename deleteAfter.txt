@@ -1,0 +1,76 @@
+"use client"
+import React from 'react'
+import { useEffect, useState } from 'react'
+import { getDataByType, getByName } from '../server/getDataApi'
+import ReactHtmlParser from 'react-html-parser'; 
+import { InfinitySpin } from 'react-loader-spinner';
+import Link from 'next/link';
+
+export default function Stories() {
+    const [infos, setInfos] = useState();
+    const [moreDataButton, setMoreDataButton] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [offset, setOffset] = useState(100);
+
+    useEffect(() => {
+        async function fetchData() {
+            const response = await getDataByType("stories", 0);
+            setInfos(response);
+        }
+
+        fetchData();
+    }, [])
+
+    function getComicId(info){
+        return info.comics.items[0].resourceURI.split('/').slice(-1);
+    }
+
+    async function handleChange(event, type) {
+        setIsLoading(true);
+        let response = null;
+        if (event.target.value === "") {
+          response = await getDataByType(type, 0);
+          setMoreDataButton(true);
+        } else {
+          console.log(event.target.value);
+        }
+        setIsLoading(false);
+        setInfos(response);
+      }
+
+
+  async function addData() {
+    setIsLoading(true);
+    const response = await getDataByType("stories", offset);
+    setMoreDataButton(response.length > 0);
+    setOffset(offset + 100);
+    setInfos([...infos, ...response]);
+    setIsLoading(false);
+  }
+  
+
+  return (
+    <>
+    <h1>Stories</h1>
+    <div className="search-container">
+      <input name="name" id="search-bar" type="text" maxLength={250} placeholder="Spider-man..." onChange={(event) => handleChange(event, "stories")} />
+      </div>
+    <div className='container-character-card'>
+        { infos ? (
+
+            infos.map((res, key) => {
+                return (
+                    <Link href={`comics/${getComicId(res)}`} key={`link-storie-${res.id}`}>
+                        <div className="stories-card">
+                            <h3>{ReactHtmlParser(res.title)}</h3>
+                        </div>
+                    </Link>
+                )
+            })
+        ):''
+        }
+        {moreDataButton ? <div className="more-data">{!isLoading ? <p className="box-shadow-inset" style={{cursor: 'pointer'}} onClick={addData}>+</p>:<InfinitySpin width='50' color="#4fa94d" />}</div>:''}
+    </div>
+    </>
+  )
+}
