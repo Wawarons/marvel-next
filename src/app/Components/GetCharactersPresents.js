@@ -10,7 +10,6 @@ export default function CharatersIn({id, type}) {
         async function fetchData(){
             const response = await getCharactersListFrom(id, type);
             setCharacters(response);
-            console.log(response);
         }
 
         fetchData();

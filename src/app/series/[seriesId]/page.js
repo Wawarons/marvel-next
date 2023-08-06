@@ -6,7 +6,7 @@ import { getInfoId } from "../../../app/server/getDataApi";
 import GetCharactersPresents from '../../../app/Components/GetCharactersPresents'
 import ReactHtmlParser from 'react-html-parser'
 import Image from "next/image";
-import moment from "moment";
+import MoreDetails from '../../Components/MoreDetails';
 
 export default function SeriesInfo({params: {seriesId}}) {
     const [info, setInfo] = useState();
@@ -15,7 +15,6 @@ export default function SeriesInfo({params: {seriesId}}) {
         async function fetchData(){
             const response = await getInfoId(seriesId, "series");
             setInfo(response[0]);
-            console.log(response);
         }
 
         fetchData();
@@ -38,7 +37,7 @@ export default function SeriesInfo({params: {seriesId}}) {
             }
         })
         for(let role in roles) {
-            allCreators += `<div class="role"><strong>${role}: </strong>${roles[role].join('')}</div>`;
+            allCreators += `<li class="role"><strong>${role}: </strong>${roles[role].join('')}</li>`;
         }
         
         return (ReactHtmlParser(allCreators));
@@ -61,10 +60,13 @@ export default function SeriesInfo({params: {seriesId}}) {
                 </div>
                 <Image className="box-shadow-inset" src={info.thumbnail.path+'.'+info.thumbnail.extension} alt="" width={150} height={200} priority={true} />
                 <p id="description">{info.description}</p>
-                <div id="more-info">
-                <p className="role"><strong>Published: </strong>{info.startYear} - {info.endYear ? info.endYear:"Present"}</p>
+                <ul id="more-info">
+                <li className="role"><strong>Published: </strong>{info.startYear} - {info.endYear ? info.endYear:"Present"}</li>
                     {getCreators(info)}
-                </div>
+                </ul>
+                {info.urls.length ? 
+                (<MoreDetails urls={info.urls}/>):''
+                }
                 </div>
                 <GetCharactersPresents id={seriesId} type="series"/>
             </>

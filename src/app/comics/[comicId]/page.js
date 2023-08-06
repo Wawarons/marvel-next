@@ -5,6 +5,7 @@ import { InfinitySpin } from "react-loader-spinner";
 import ReactHtmlParser from 'react-html-parser'; 
 import { getInfoId } from "../../server/getDataApi";
 import GetCharactersPresents from "../../Components/GetCharactersPresents";
+import MoreDetails from '../../Components/MoreDetails';
 import Image from "next/image";
 import moment from "moment";
 
@@ -17,7 +18,6 @@ export default function ComicInfo({params: {comicId}}) {
         async function fetchData(){
             setIsLoading(true);
             const response = await getInfoId(comicId, "comics");
-            console.log(response);
             if(response){
                 setInfos(response[0]);
             }else{
@@ -55,7 +55,7 @@ export default function ComicInfo({params: {comicId}}) {
     function getCreators(info) {
         let roles = {};
         let allCreators = "";
-        info.creators.items.map((creator) => {
+        info.creators.items.map((creator, index) => {
             if(roles[creator.role] && roles[creator.role].length <= 4){
                roles[creator.role].push(`<a href="${getFromUrl(creator.resourceURI)}">, ${creator.name}</a>`);
             }else{
@@ -63,7 +63,7 @@ export default function ComicInfo({params: {comicId}}) {
             }
         })
         for(let role in roles) {
-            allCreators += `<div class="role"><strong>${role}: </strong>${roles[role].join('')}</div>`;
+            allCreators += `<li class="role"><strong>${role}: </strong>${roles[role].join('')}</li>`;
         }
         
         return (ReactHtmlParser(allCreators));
@@ -77,20 +77,16 @@ export default function ComicInfo({params: {comicId}}) {
             (!isLoading ? (
                 <>
             <div id="presentation" className="box-shadow-inset">
-            <div id="extern-links">
-                {infos.urls.length ? 
-                (infos.urls.map((url, key) => {
-                    return <a key={key} href={url.url} target="_blank" rel="noopener">{url.type}</a>
-                })):''
-                }
-            </div>
                 <h1>{infos.title}</h1>
                 <Image className="box-shadow-inset" src={getImg(infos)} alt={infos.title} width={150} height={250} />
                 <p id="description">{ReactHtmlParser(infos.description)}</p>
-                <div id="more-info">
-                <p className="role"><strong>Published: </strong>{parseDate(infos.dates[0].date)}</p>
+                <ul id="more-info">
+                <li className="role"><strong>Published: </strong>{parseDate(infos.dates[0].date)}</li>
                     {getCreators(infos)}
-                </div>
+                </ul>
+                {infos.urls.length ? 
+                (<MoreDetails urls={infos.urls}/>):''
+                }
             </div>
             <GetCharactersPresents id={comicId} type="comics"/>
                     </>

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import GetCharactersPresents from '../../Components/GetCharactersPresents'
 import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
+import MoreDetails from '../../Components/MoreDetails'
 
 export default function Event({params: {eventId}}) {
 
@@ -53,7 +54,7 @@ export default function Event({params: {eventId}}) {
           }
       })
       for(let role in roles) {
-          allCreators += `<div class="role"><strong>${role}: </strong>${roles[role].join('')}</div>`;
+          allCreators += `<li class="role"><strong>${role}: </strong>${roles[role].join('')}</li>`;
       }
       
       return (ReactHtmlParser(allCreators));
@@ -75,10 +76,11 @@ return (
             </div>
             <Image className="box-shadow-inset" src={getImg(infos)} alt={infos.title} width={150} height={250} />
             <p id="description">{infos.description}</p>
-            <div id="more-info">
-                <p className="role"><strong>Published: </strong>{parseDate(infos.start)} - {infos.end ? parseDate(infos.end):"Present"}</p>
+            <ul id="more-info">
+                <li className="role"><strong>Published: </strong>{parseDate(infos.start)} - {infos.end ? parseDate(infos.end):"Present"}</li>
                 {getCreators(infos)}
-            </div>
+            </ul>
+            <MoreDetails urls={infos.urls} />
         </div>
             <GetCharactersPresents type="events" id={eventId}/>
                 </>      

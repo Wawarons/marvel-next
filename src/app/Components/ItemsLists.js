@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { InfinitySpin, TailSpin } from "react-loader-spinner";
 import { getDataByType, getByName } from "../server/getDataApi";
+import {BsSortDown} from 'react-icons/bs'
 import Link from "next/link";
 import ReactHtmlParser from 'react-html-parser'; 
 import Card from "./Card";
@@ -118,11 +119,11 @@ export default function ItemsLists({ type }) {
         <select className="box-shadow-inset" name="sort" id="sort-type" onChange={getValue} defaultValue={options[type].defaultValue}>
             {ReactHtmlParser(getOptions(options[type]))}
         </select>
-        <p className="box-shadow-inset" id="check-reverse" onClick={(event)=>{getReverse(event)}}>Reverse </p>
+        <div className="box-shadow-inset" id="check-reverse" onClick={(event)=>{getReverse(event)}}><BsSortDown /></div>
         {isLoading ? <TailSpin height="20" width="20" color="#4fa94d" ariaLabel="tail-spin-loading" radius="1" visible={true} />:''}
         </div>
         </div>
-      <h1>{type}</h1>
+      <h1 className="capitalize" style={{textAlign:'center'}}>{type}</h1>
       <div className="container-character-card">
         {data ? (
           data.map((res, key) => {

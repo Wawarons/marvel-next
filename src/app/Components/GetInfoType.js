@@ -24,12 +24,7 @@ export default function GetCharacterInfo({forType, id, type}) {
         }
         fetchData();
     }, [forType, id, type])
-
-    
-    const capitalize = (word) => {
-        return word[0].toUpperCase() + word.slice(1); 
-
-    }
+ 
 
     async function addData(){
         setIsLoading(true);
@@ -62,7 +57,7 @@ export default function GetCharacterInfo({forType, id, type}) {
         <>
         { infos && infos.length ? 
         (<div id={`${type}-parts`}>
-            <h2 className="title-realisations box-shadow-inset" style={{textAlign:'center'}}>{capitalize(type)}</h2>
+            <h2 className="title-realisations box-shadow-inset capitalize" style={{textAlign:'center'}}>{type}</h2>
             <div className="realisations-container box-shadow-inset">
                 <div className="search-bar-realisations">
                     <input type="text" id={`input-${type}`} name="searchName" placeholder="marvel..."  className="hidden bar-search" onChange={handleChange}/>

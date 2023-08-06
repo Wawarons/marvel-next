@@ -9,7 +9,7 @@ const roboto = Roboto_Condensed({
  
 
 export const metadata = {
-  title: 'Marvel API',
+  title: 'ComiVerse',
   description: 'Marvel characters, comics, events. All informations about marvel universe',
 }
 

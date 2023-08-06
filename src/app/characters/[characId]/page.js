@@ -23,7 +23,7 @@ export default function CharactPage({params: {characId}}) {
         {
             info ? (
                 <div>
-                    <h1>{info.name}</h1>
+                    <h1 className="capitalize" style={{textAlign:'center'}}>{info.name}</h1>
                     <Image className="poster box-shadow-inset" src={info.thumbnail.path+'.'+info.thumbnail.extension} alt="" width={350} height={250} />
                     <p className="description">{info.description}</p>
                         <GetInfoType forType="characters" id={characId} type="comics" />
