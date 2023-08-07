@@ -1,9 +1,10 @@
 "use client"
 import { React, useEffect, useState } from 'react'
-import { getInfoId } from '../../server/getDataApi'
+import { getInfoId, getStoriesType } from '../../server/getDataApi'
 import { InfinitySpin } from 'react-loader-spinner'
 import Image from 'next/image'
 import GetCharactersPresents from '../../Components/GetCharactersPresents'
+import StoriesList from '../../Components/StoriesList'
 import moment from 'moment'
 import ReactHtmlParser from 'react-html-parser'
 import MoreDetails from '../../Components/MoreDetails'
@@ -11,10 +12,13 @@ import MoreDetails from '../../Components/MoreDetails'
 export default function Event({params: {eventId}}) {
 
     const [infos, setInfos] = useState();
+    const [storiesEvent, setStoriesEvent] = useState();
 
     useEffect(() => {
         async function fetchData() {
             const response = await getInfoId(eventId, "events");
+            const storiesResponse = await getStoriesType(eventId, "events");
+            setStoriesEvent(storiesResponse);
             setInfos(response[0]);
         }
 
@@ -81,6 +85,12 @@ return (
                 {getCreators(infos)}
             </ul>
             <MoreDetails urls={infos.urls} />
+            {
+                infos.stories.returned > 0 ?
+                <div className="stories-container">
+                    <StoriesList info={storiesEvent} />
+                </div>:''
+            }
         </div>
             <GetCharactersPresents type="events" id={eventId}/>
                 </>      

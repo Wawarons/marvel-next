@@ -195,3 +195,20 @@ export async function getByNameCharacterType(name, characId, type){
             console.error("Fetching data error...", error);
         })
 }
+
+export async function getStoriesType(id, type){
+    return await axios.get(`${api_url}/${type}/${id}/stories?limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+        return response.data.data.results;
+    }).catch(function (error){
+        console.error("Fetching data error...", error);
+    })
+}
+
+
+export async function getComicsSeries(id) {
+    return await axios.get(`${api_url}/series/${id}/comics?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+        return response.data.data.results;
+    }).catch(function (error){
+        console.error("Fetching data error...", error);
+    })
+}

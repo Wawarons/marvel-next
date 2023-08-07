@@ -7,6 +7,7 @@ import {BsSortDown} from 'react-icons/bs'
 import Link from "next/link";
 import ReactHtmlParser from 'react-html-parser'; 
 import Card from "./Card";
+import CardStorie from "./CardStorie";
 
 export default function ItemsLists({ type }) {
 
@@ -80,9 +81,6 @@ export default function ItemsLists({ type }) {
     setData(response);
   }
 
-  function getComicId(info){
-    return info.comics.items[0].resourceURI.split('/').slice(-1);
-}
 
   async function getValue() {
     setIsLoading(true);
@@ -129,21 +127,15 @@ export default function ItemsLists({ type }) {
           data.map((res, key) => {
             if(type == "stories"){
                 return (
-                    <Link href={`comics/${getComicId(res)}`} key={`link-storie-${res.id}`}>
-                        <div className="stories-card">
-                            <h3>{ReactHtmlParser(res.title)}</h3>
-                        </div>
-                    </Link>
+                   <CardStorie info={res} key={`story-${key}`}/>
                 )
-            }else{
-
-            }
-            const imgUrl = `${res.thumbnail.path}.${res.thumbnail.extension}`;
-            if (type == "characters") {
+            }else if (type == "characters") {
+              const imgUrl = `${res.thumbnail.path}.${res.thumbnail.extension}`;
               return (
                 <Card id={res.id} key={key} name={res.name} imgPath={imgUrl} type={type} />
               );
             } else {
+              const imgUrl = `${res.thumbnail.path}.${res.thumbnail.extension}`;
               return (
                 <Card id={res.id} key={key} name={res.title} imgPath={imgUrl} type={type} />
               );
@@ -154,7 +146,7 @@ export default function ItemsLists({ type }) {
       </div>
            {moreDataButton ? <div className="more-data">{!isLoading ? <p className="box-shadow-inset" style={{cursor: 'pointer'}} onClick={addData}>+</p>:<InfinitySpin width='50' color="#4fa94d" />}</div>:''}
       <div id="go-top">
-        <a href="#search-bar">⬆</a>
+        <a href="#sort-type">⬆</a>
       </div>
     </main>
   );

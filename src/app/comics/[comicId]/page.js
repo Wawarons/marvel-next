@@ -3,9 +3,12 @@
 import { useState, useEffect } from "react";
 import { InfinitySpin } from "react-loader-spinner";
 import ReactHtmlParser from 'react-html-parser'; 
-import { getInfoId } from "../../server/getDataApi";
+import { LuBookPlus } from 'react-icons/lu';
+import { getInfoId, getStoriesType } from "../../server/getDataApi";
 import GetCharactersPresents from "../../Components/GetCharactersPresents";
 import MoreDetails from '../../Components/MoreDetails';
+import StoriesList from '../../Components/StoriesList';
+import ImagesComic from '../../Components/ImagesComic';
 import Image from "next/image";
 import moment from "moment";
 
@@ -13,19 +16,17 @@ export default function ComicInfo({params: {comicId}}) {
     
     const [infos, setInfos] = useState();
     const [isLoading, setIsLoading] = useState(false);
+    const [storiesComic, setStoriesComic] = useState();
 
     useEffect(() => {
         async function fetchData(){
             setIsLoading(true);
             const response = await getInfoId(comicId, "comics");
-            if(response){
-                setInfos(response[0]);
-            }else{
-                throw new Error("No data.");
-            }
+            const storiesResponse = await getStoriesType(comicId, "comics");
+            response ? setInfos(response[0]):'';
+            storiesResponse ? setStoriesComic(storiesResponse):''
             setIsLoading(false);
         }
-
         fetchData();
     }, [comicId])
 
@@ -46,9 +47,9 @@ export default function ComicInfo({params: {comicId}}) {
         return urlImg;
     }
 
-    function getFromUrl(url){
+    function getFromUrl(url, type){
         url = url.split('/');
-        return '/creators/'+url[url.length-1];
+        return `/${type}/${url[url.length-1]}`;
 
     }
 
@@ -57,9 +58,9 @@ export default function ComicInfo({params: {comicId}}) {
         let allCreators = "";
         info.creators.items.map((creator, index) => {
             if(roles[creator.role] && roles[creator.role].length <= 4){
-               roles[creator.role].push(`<a href="${getFromUrl(creator.resourceURI)}">, ${creator.name}</a>`);
+               roles[creator.role].push(`<a href="${getFromUrl(creator.resourceURI, "creators")}">, ${creator.name}</a>`);
             }else{
-                roles[creator.role] = [`<a href="${getFromUrl(creator.resourceURI)}">${creator.name}</a>`];
+                roles[creator.role] = [`<a href="${getFromUrl(creator.resourceURI, "creators")}">${creator.name}</a>`];
             }
         })
         for(let role in roles) {
@@ -78,12 +79,18 @@ export default function ComicInfo({params: {comicId}}) {
                 <>
             <div id="presentation" className="box-shadow-inset">
                 <h1>{infos.title}</h1>
-                <Image className="box-shadow-inset" src={getImg(infos)} alt={infos.title} width={150} height={250} />
-                <p id="description">{ReactHtmlParser(infos.description)}</p>
+                <ImagesComic images={infos.images} />
+                <p id="description">{infos.description ? ReactHtmlParser(infos.description):"No description"}</p>
                 <ul id="more-info">
                 <li className="role"><strong>Published: </strong>{parseDate(infos.dates[0].date)}</li>
                     {getCreators(infos)}
                 </ul>
+                {
+                infos.stories.returned > 0 ?
+                <div className="stories-container">
+                    <StoriesList info={storiesComic} />
+                </div>:''
+            }
                 {infos.urls.length ? 
                 (<MoreDetails urls={infos.urls}/>):''
                 }
