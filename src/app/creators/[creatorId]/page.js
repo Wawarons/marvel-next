@@ -1,26 +1,26 @@
 "use client"
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { getInfoId }  from '../../server/getDataApi'
+import { getInfoId }  from '../../api/getDataApi'
 import GetInfoType from '../../Components/GetInfoType'
 
 export default function CreatorInfo({params: {creatorId}}) {
     
-    const [infos, setInfos] = useState();
+    const [data, setData] = useState();
     
     useEffect(() => {
         async function fetchData() {
             const response = await getInfoId(creatorId, "creators");
-            setInfos(response[0]);
+            setData(response[0]);
         }
         fetchData();
     }, [creatorId])
 
   return (
     <main>
-    { infos ? 
+    { data ? 
         (   <>
-            <h1 id="h1-realisation">{infos.firstName} {infos.lastName}</h1>
+            <h1 id="h1-realisation">{data.firstName} {data.lastName}</h1>
             <div>
                 <GetInfoType forType="creators" id={creatorId} type="comics" />
                 <GetInfoType forType="creators" id={creatorId} type="series" />

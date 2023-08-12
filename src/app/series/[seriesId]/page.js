@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { InfinitySpin } from "react-loader-spinner";
-import { getInfoId, getComicsSeries } from "../../../app/server/getDataApi";
-import GetCharactersPresents from '../../../app/Components/GetCharactersPresents'
+import { getInfoId, getComicsSeries } from "../../api/getDataApi";
+import GetCharactersPresents from '../../Components/GetCharactersPresents'
 import ReactHtmlParser from 'react-html-parser'
 import Image from "next/image";
 import MoreDetails from '../../Components/MoreDetails';
@@ -11,16 +11,22 @@ import Card from "../../Components/Card";
 import {MdArrowForwardIos, MdArrowBackIos} from 'react-icons/md';
 
 export default function SeriesInfo({params: {seriesId}}) {
-    const [info, setInfo] = useState();
+    const [data, setData] = useState();
     const [comics, setComics] = useState();
+    const [isLoading, setIsLoading]  = useState(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         async function fetchData(){
-            const response = await getInfoId(seriesId, "series");
+            setIsLoading(true);
+            const response = await getInfoId(seriesId, "series").then((response) => {
+                setData(response[0]);
+            }).catch(errorMessage => {
+                setError(true);
+            }) 
             const comicsResponse = await getComicsSeries(seriesId);
-            console.log(comicsResponse);
             comicsResponse ? setComics(comicsResponse):''
-            setInfo(response[0]);
+            setIsLoading(false);
         }
 
         fetchData();
@@ -65,22 +71,24 @@ export default function SeriesInfo({params: {seriesId}}) {
 
       <main>
       {
-        info ?
+        data ?
          (
             <>
                 <div id="presentation">
                 <div id="top">
-                {info.previous ? <a className="arrows" href={getFromUrl(info.previous.resourceURI, "series")}><MdArrowBackIos /></a>:''}
-                <h1 >{info.title}</h1>
-                {info.next ? <a className="arrows" href={getFromUrl(info.next.resourceURI, "series")}><MdArrowForwardIos /></a>:''}
+                {data.previous ? <a className="arrows" href={getFromUrl(data.previous.resourceURI, "series")}><MdArrowBackIos /></a>:''}
+                <h1 >{data.title}</h1>
+                {data.next ? <a className="arrows" href={getFromUrl(data.next.resourceURI, "series")}><MdArrowForwardIos /></a>:''}
                 </div>
-                <Image className="box-shadow-inset" src={info.thumbnail.path+'.'+info.thumbnail.extension} alt="" width={150} height={200} priority={true} />
-                <p id="description">{info.description}</p>
+                <div id="presentation-img">
+                <Image className="box-shadow-inset" src={data.thumbnail.path+'.'+data.thumbnail.extension} alt="" width={150} height={200} priority={true} />
+                </div>
+                <p id="description">{data.description}</p>
                 <ul id="more-info">
-                <li className="role"><strong>Published: </strong>{info.startYear} - {info.endYear ? info.endYear:"Present"}</li>
-                    {getCreators(info)}
+                <li className="role"><strong>Published: </strong>{data.startYear} - {data.endYear ? data.endYear:"Present"}</li>
+                    {getCreators(data)}
                 </ul>
-                {info.urls.length ? (<MoreDetails urls={info.urls}/>):''}
+                {data.urls.length ? (<MoreDetails urls={data.urls}/>):''}
                 </div>
                 <div className="comics-container">
 
@@ -94,10 +102,7 @@ export default function SeriesInfo({params: {seriesId}}) {
                 </div>
                 <GetCharactersPresents id={seriesId} type="series"/>
             </>
-        ):(<div className="loading center-loading"><InfinitySpin 
-                        width='250'
-                        color="#ff0000ad"
-                        /></div>)
+        ):(isLoading ? <div className="loading center-loading"><InfinitySpin width='250' color="#ff0000ad"/></div>:(error ? <h2 className="not-found">Something went wrong !</h2>:''))
         }
     </main>)
 }

@@ -1,11 +1,11 @@
 import React from 'react'
 import CardStorie from './CardStorie'
 
-export default function StoriesList({info}) {
+export default function StoriesList({data}) {
   return (
-    info.map((storie, key) => {
+    data.map((storie, key) => {
         return (
-            <CardStorie info={storie} key={`storie-card-${key}`}/>
+            <CardStorie data={storie} key={`storie-card-${key}`}/>
         )
     })
   )

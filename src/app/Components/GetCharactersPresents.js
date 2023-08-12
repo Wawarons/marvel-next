@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import {getCharactersListFrom} from '../server/getDataApi';
+import {getCharactersListFrom} from '../api/getDataApi';
 import CharacterCard from './Card';
 
 export default function CharatersIn({id, type}) {

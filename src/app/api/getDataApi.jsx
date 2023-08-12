@@ -31,10 +31,10 @@ export async function getDataByType(type, offset, sortType) {
     if(validType.includes(type) == false){
         throw new Error("Bad value for param type.");
     }
-        return await axios.get(`${api_url}${type}?orderBy=${sort}&limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((res) => {
+        return await axios.get(`${api_url}/${type}?orderBy=${sort}&limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((res) => {
             return res.data.data.results;
         }).catch(function (error){
-            throw new Error("Failed fetching data.", error);
+            throw new Error("Fetching data error...", error);
         }); 
     
 }
@@ -58,10 +58,10 @@ export async function getByName(name, type, sortType){
             searchName = "titleStartsWith";
         }
         
-        return await axios.get(`${api_url}${type}?orderBy=${sort}&${searchName}=${name}&limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+        return await axios.get(`${api_url}/${type}?orderBy=${sort}&${searchName}=${name}&limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
             return response.data.data.results;
         }).catch(function (error){
-            console.error("Fetching data error...", error);
+            throw new Error("Fetching data error...", error);
         })
 }
 
@@ -73,13 +73,10 @@ export async function getByName(name, type, sortType){
  * @returns Characters informations.
  */
 export async function getInfoId(id, type){
-    return await axios.get(`${api_url}${type}/${id}?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+    return await axios.get(`${api_url}/${type}/${id}?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
         return response.data.data.results;
-    }).catch(function (error){
-        console.error("Fetching data error...", error);
-    })
+    });
 }
-
 /**
  * 
  * @param {int} id 
@@ -92,19 +89,19 @@ export async function getCharactersListFrom(id, type){
     if(validType.includes(type) == false){
         throw new Error("Bad value for param type.");
     }
-        return await axios.get(`${api_url}${type}/${id}/characters?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+        return await axios.get(`${api_url}/${type}/${id}/characters?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
             return response.data.data.results;
         }).catch(function (error){
-            console.error("Fetching data error...", error);
+            throw new Error("Fetching data error...", error);
         }) 
 }
 
 
 export async function getTypeInfoStoriesId(id, type){
-    return await axios.get(`${api_url}stories/${id}/${type}?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+    return await axios.get(`${api_url}/stories/${id}/${type}?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
         return response.data.data.results;
     }).catch(function (error){
-        console.error("Fetching data error...", error);
+        throw new Error("Fetching data error...", error);
     })
 
 }
@@ -120,10 +117,10 @@ export async function getTypeInfoStoriesId(id, type){
 export async function getRealisationCreatorId(idCreator, type, offset, limit){
     const skipNb = offset ? offset:0;
     const limitNb = limit ? limit:100;
-    return await axios.get(`${api_url}creators/${idCreator}/${type}?limit=${limitNb}&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+    return await axios.get(`${api_url}/creators/${idCreator}/${type}?limit=${limitNb}&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
         return response.data.data;
     }).catch(function (error){
-        console.error("Fetching data error...", error);
+        throw new Error("Fetching data error...", error);
     })
 }
 /**
@@ -137,10 +134,11 @@ export async function getRealisationCreatorId(idCreator, type, offset, limit){
 export async function getByTypeInfoId(forType, id, type, offset, limit){
     const skipNb = offset ? offset:0;
     const limitNb = limit ? limit:100;
-    return await axios.get(`${api_url}${forType}/${id}/${type}?limit=${limitNb}&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+
+    return await axios.get(`${api_url}/${forType}/${id}/${type}?limit=${limitNb}&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
         return response.data.data;
     }).catch(function (error){
-        console.error("Fetching data error...", error);
+        throw new Error("Fetching data error...", error);
     })
 }
 
@@ -167,7 +165,7 @@ export async function searchByName(name, id, type, typeSearch){
         return await axios.get(`${api_url}/${type}/${id}/${typeSearch}?${searchName}=${name}&limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
             return response.data.data.results;
         }).catch(function (error){
-            console.error("Fetching data error...", error);
+            throw new Error("Fetching data error...", error);
         })
 }
 
@@ -192,7 +190,7 @@ export async function getByNameCharacterType(name, characId, type){
         return await axios.get(`${api_url}/characters/${characId}/${type}?${searchName}=${name}&limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
             return response.data.data.results;
         }).catch(function (error){
-            console.error("Fetching data error...", error);
+            throw new Error("Fetching data error...", error);
         })
 }
 
@@ -200,7 +198,7 @@ export async function getStoriesType(id, type){
     return await axios.get(`${api_url}/${type}/${id}/stories?limit=100&offset=${skipNb}&ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
         return response.data.data.results;
     }).catch(function (error){
-        console.error("Fetching data error...", error);
+        throw new Error("Fetching data error...", error);
     })
 }
 
@@ -209,6 +207,14 @@ export async function getComicsSeries(id) {
     return await axios.get(`${api_url}/series/${id}/comics?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
         return response.data.data.results;
     }).catch(function (error){
-        console.error("Fetching data error...", error);
+        throw new Error("Fetching data error...", error);
+    })
+}
+
+export async function getDataUrl(url){
+    return await axios.get(`${url}?ts=1&apikey=${api_key}&hash=${hash}`).then((response) => {
+        return response.data.data.results;
+    }).catch(function (error){
+        throw new Error("Fetching data error...", error);
     })
 }

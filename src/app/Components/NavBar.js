@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link"
 import { RiMenuUnfoldLine } from 'react-icons/ri'
-import { MdOutlineLightMode, MdOutlineNightlight } from 'react-icons/md'
 
 export default function NavBar() {
 
@@ -17,15 +16,12 @@ export default function NavBar() {
 
   return (
     <header className="shadow-bottom">
-    <div className="theme-choose">
-      <MdOutlineLightMode />
-      <MdOutlineNightlight />
-    </div>
     <h1>ComiVerse</h1>
     <div id="menu-icon" onClick={hideBar} className="">
         <RiMenuUnfoldLine size='1.5em'/>
     </div>
     <nav className="show-nav-bar">
+        <Link className = "link-nav" href="./">Home</Link>
         <Link className = "link-nav" href="../characters">Characters</Link>
         <Link className = "link-nav" href="../comics">Comics</Link>
         <Link className = "link-nav" href="../events">Events</Link>

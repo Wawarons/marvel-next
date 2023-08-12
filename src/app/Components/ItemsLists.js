@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { InfinitySpin, TailSpin } from "react-loader-spinner";
-import { getDataByType, getByName } from "../server/getDataApi";
+import { getDataByType, getByName } from "../api/getDataApi";
 import {BsSortDown} from 'react-icons/bs'
-import Link from "next/link";
 import ReactHtmlParser from 'react-html-parser'; 
 import Card from "./Card";
 import CardStorie from "./CardStorie";
@@ -25,7 +24,7 @@ export default function ItemsLists({ type }) {
     comics: {
       defaultValue: 'title',
       focDate: 'focDate',
-      onSaleDate:'on sale date',
+      onsaleDate:'on sale date',
       title: 'title',
       issueNumber:'issue number',
       modified: 'modified'
@@ -80,7 +79,7 @@ export default function ItemsLists({ type }) {
     }
     setData(response);
   }
-
+  
 
   async function getValue() {
     setIsLoading(true);
@@ -122,12 +121,12 @@ export default function ItemsLists({ type }) {
         </div>
         </div>
       <h1 className="capitalize" style={{textAlign:'center'}}>{type}</h1>
-      <div className="container-character-card">
+      <div className="container-card">
         {data ? (
           data.map((res, key) => {
             if(type == "stories"){
                 return (
-                   <CardStorie info={res} key={`story-${key}`}/>
+                   <CardStorie data={res} key={`story-${key}`}/>
                 )
             }else if (type == "characters") {
               const imgUrl = `${res.thumbnail.path}.${res.thumbnail.extension}`;
@@ -144,7 +143,7 @@ export default function ItemsLists({ type }) {
         ) : <InfinitySpin className="loading" width="200" color="#4fa94d" />
         }
       </div>
-           {moreDataButton ? <div className="more-data">{!isLoading ? <p className="box-shadow-inset" style={{cursor: 'pointer'}} onClick={addData}>+</p>:<InfinitySpin width='50' color="#4fa94d" />}</div>:''}
+           {moreDataButton ? <div className="more-data">{!isLoading ? <p className="box-shadow-inset" style={{cursor: 'pointer'}} onClick={addData}>+</p>:<InfinitySpin width='50' color="#4fa94d" />}</div>:<h3 className="capitalize" style={{textAlign: "center"}}>{type} not found.</h3>}
       <div id="go-top">
         <a href="#sort-type">⬆</a>
       </div>

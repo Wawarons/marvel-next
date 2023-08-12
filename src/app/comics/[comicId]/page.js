@@ -3,27 +3,31 @@
 import { useState, useEffect } from "react";
 import { InfinitySpin } from "react-loader-spinner";
 import ReactHtmlParser from 'react-html-parser'; 
-import { LuBookPlus } from 'react-icons/lu';
-import { getInfoId, getStoriesType } from "../../server/getDataApi";
+import { getInfoId, getStoriesType } from "../../api/getDataApi";
 import GetCharactersPresents from "../../Components/GetCharactersPresents";
 import MoreDetails from '../../Components/MoreDetails';
 import StoriesList from '../../Components/StoriesList';
 import ImagesComic from '../../Components/ImagesComic';
-import Image from "next/image";
+import {GiBookPile} from 'react-icons/gi';
 import moment from "moment";
 
 export default function ComicInfo({params: {comicId}}) {
     
-    const [infos, setInfos] = useState();
+    const [data, setData] = useState();
     const [isLoading, setIsLoading] = useState(false);
     const [storiesComic, setStoriesComic] = useState();
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         async function fetchData(){
             setIsLoading(true);
-            const response = await getInfoId(comicId, "comics");
+            const response = await getInfoId(comicId, "comics").then((data) => {
+                setData(data[0]);
+              }).catch((errorMessage) => {
+                  setError(true);
+              });;
             const storiesResponse = await getStoriesType(comicId, "comics");
-            response ? setInfos(response[0]):'';
+            response ? setData(response[0]):'';
             storiesResponse ? setStoriesComic(storiesResponse):''
             setIsLoading(false);
         }
@@ -34,17 +38,6 @@ export default function ComicInfo({params: {comicId}}) {
     function parseDate(date){
         const newDate = new Date(date);
         return moment(newDate).format("DD/MM/YYYY");
-    }
-
-    function getImg(info){
-        let urlImg = null;
-        if(info.images[0]){
-            urlImg = `${info.images[0].path}.${info.images[0].extension}`
-        }else[
-            urlImg = `${info.thumbnail.path}.${info.thumbnail.extension}`
-        ]
-
-        return urlImg;
     }
 
     function getFromUrl(url, type){
@@ -74,30 +67,32 @@ export default function ComicInfo({params: {comicId}}) {
   return (
       <main>
       {
-        infos ?
+        data ?
             (!isLoading ? (
                 <>
             <div id="presentation" className="box-shadow-inset">
-                <h1>{infos.title}</h1>
-                <ImagesComic images={infos.images} />
-                <p id="description">{infos.description ? ReactHtmlParser(infos.description):"No description"}</p>
+
+                <h1>{data.title}</h1>
+                <ImagesComic images={data} />
+                <p id="description">{data.description ? ReactHtmlParser(data.description):"No description"}</p>
+                
                 <ul id="more-info">
-                <li className="role"><strong>Published: </strong>{parseDate(infos.dates[0].date)}</li>
-                    {getCreators(infos)}
+                    <li className="role"><strong>Published: </strong>{parseDate(data.dates[0].date)}</li>
+                    {getCreators(data)}
                 </ul>
-                {
-                infos.stories.returned > 0 ?
+
+                {data.stories.returned > 0 ?
                 <div className="stories-container">
-                    <StoriesList info={storiesComic} />
-                </div>:''
-            }
-                {infos.urls.length ? 
-                (<MoreDetails urls={infos.urls}/>):''
-                }
+                    <StoriesList data={storiesComic} />
+                </div>:''}
+
+                {data.urls.length ? (<MoreDetails urls={data.urls}/>):''}
+
+                <a href={getFromUrl(data.series.resourceURI, "series")} className="series"><GiBookPile /></a>
             </div>
             <GetCharactersPresents id={comicId} type="comics"/>
                     </>
-                ):<div className="loading center-loading"><InfinitySpin width='250' color="#ff0000ad" /></div>):''      
+                ):<div className="loading center-loading"><InfinitySpin width='250' color="#ff0000ad" /></div>):(error ? <h2 className="error">Something went wrong !</h2>:'')      
         }
     </main>)
 }

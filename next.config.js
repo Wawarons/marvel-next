@@ -9,6 +9,5 @@ module.exports = {
             hostname: 'i.annihil.us'
           },
         ],
-      },
-      reactStrictMode: true,
+      }
 };
