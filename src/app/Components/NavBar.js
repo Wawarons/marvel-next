@@ -24,7 +24,7 @@ export default function NavBar() {
         <RiMenuUnfoldLine size='1.5em'/>
     </div>
     <nav className="show-nav-bar">
-        <Link className = "link-nav" href="./">Home</Link>
+        <Link className = "link-nav" href="/">Home</Link>
         <Link className = "link-nav" href="../characters">Characters</Link>
         <Link className = "link-nav" href="../comics">Comics</Link>
         <Link className = "link-nav" href="../events">Events</Link>
