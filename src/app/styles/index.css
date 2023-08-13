@@ -139,9 +139,8 @@ nav {
 
 #stories-home-container {
   position: relative;
-  left: 50%;
-  transform: translateX(-50%);
   max-width: 90%;
+  margin: 0 auto;
 }
 
 #stories-title-container {
@@ -166,7 +165,7 @@ nav {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .center-loading {
@@ -436,8 +435,9 @@ nav {
   grid-area: st;
   flex-direction: row;
   justify-content: stretch;
-  overflow-x: scroll;
+  overflow: scroll;
   margin: 0 auto;
+  max-height: 400px;
   width: 90%;
   padding: 10px;
   box-shadow: 0 0 4px 2px #0000008b inset;
@@ -446,8 +446,9 @@ nav {
 .stories-container .stories-card {
   width: fit-content;
   height: fit-content;
+  min-width: 220px;
   font-size: 0.6em;
-  margin: 15px 10px;
+  margin: 25px 10px;
   padding: 0;
 }
 

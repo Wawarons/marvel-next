@@ -14,10 +14,12 @@ export default function Home() {
   useEffect(() => {
       setIsLoading(true);
       let offsetRand = Math.floor(Math.random() * 200);
+
       const fetchData = async () => {
         const response = await getDataByType("stories", offsetRand);
         setData(response.slice(0, 5));
         setIsLoading(false);
+        
     } 
 
     fetchData();
@@ -38,8 +40,8 @@ export default function Home() {
     <>
     <div id='home-container'>
         <h1>Welcome to the ComiVerse</h1>
-        <p>Here you can find a lot of informations about marvel&apos;s comics universe</p>
-        <h3>How we can help you ?</h3>
+        <p>Here you&apos;ll find a wealth of information on the world of Marvel comics.</p>
+        <h3>How can we help you ?</h3>
         <nav id='home-nav'>
             <Link className="link-nav" href="/characters">Characters</Link>
             <Link className="link-nav" href="/comics">Comics</Link>
