@@ -7,13 +7,14 @@ export default function CharatersIn({id, type}) {
     const [characters, setCharacters] = useState();
 
     useEffect(() => {
-        async function fetchData(){
+        const fetchData = async () => {
             const response = await getCharactersListFrom(id, type);
             setCharacters(response);
         }
 
         fetchData();
     }, [id, type])
+    
   return (
     <div>
     { characters && characters.length ?

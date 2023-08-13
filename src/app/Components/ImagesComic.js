@@ -8,29 +8,40 @@ export default function ImagesComic({images}) {
 
     const [imageNow, setImageNow] = useState(0);
 
+    /**
+     * 
+     * @param {Array} images 
+     * @returns comic's images.
+     */
     const initImages = (images) => {
-            const imagesInitied = [];
-            images.map((img) => {
+        const imagesInitied = [];
+        if(images.images.length){
+            images.images.map((img) => {
                 imagesInitied.push(img.path+'.'+img.extension);
             })
+        }else{
+            imagesInitied.push(images.thumbnail.path+'.'+images.thumbnail.extension);
+        }
 
             return imagesInitied;
         }
-
         
+     /**
+   * 
+   * @param {Event} event 
+   * @param {int} type 
+   * Handle click event for change image.
+   */    
     const handleChange = (event, index) => {
         setImageNow(index);
         document.querySelectorAll(".active-image").forEach((selecter) => {
             selecter.classList.remove('active-image');
         })
         event.target.classList.add("active-image");
-        document.querySelector("#img-selected").classList.remove("anim-img");
-        document.querySelector('#img-selected').classList.add("anim-img");
     }
     
 
-    let imagesComics  = initImages(images.images);
-    imagesComics.length > 0 ? imagesComics:imagesComics = [images.thumbnail.path+'.'+images.thumbnail.extension];
+    let imagesComics  = initImages(images);
 
   return (
     <div id='presentation-img'>

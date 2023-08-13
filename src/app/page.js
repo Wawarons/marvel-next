@@ -12,17 +12,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setIsLoading(true);
-    let offsetRand = Math.floor(Math.random() * 200);
-    const fetchData = async () => {
-      const response = await getDataByType("stories", offsetRand);
-      setData(response.slice(0, 5));
-      setIsLoading(false);
+      setIsLoading(true);
+      let offsetRand = Math.floor(Math.random() * 200);
+      const fetchData = async () => {
+        const response = await getDataByType("stories", offsetRand);
+        setData(response.slice(0, 5));
+        setIsLoading(false);
     } 
 
     fetchData();
   }, []);
 
+  /**
+   * Get five random stories. 
+   */
   const randomStories = async () => {
     setIsLoading(true);
     let offsetRand = Math.floor(Math.random() * 200);

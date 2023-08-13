@@ -4,7 +4,10 @@ import { RiMenuUnfoldLine } from 'react-icons/ri'
 
 export default function NavBar() {
 
-  function hideBar(){
+  /**
+   * Hide or show the nav bar.
+   */
+  const hideBar = () => {
     let navBar = document.querySelector('nav');
     let menuIcon = document.getElementById("menu-icon");
     menuIcon.classList.toggle('compact');

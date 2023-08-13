@@ -5,9 +5,8 @@ import { InfinitySpin } from 'react-loader-spinner'
 import Image from 'next/image'
 import GetCharactersPresents from '../../Components/GetCharactersPresents'
 import StoriesList from '../../Components/StoriesList'
-import moment from 'moment'
-import ReactHtmlParser from 'react-html-parser'
 import MoreDetails from '../../Components/MoreDetails'
+import { parseDate, getFromUrl, getCreators, getImg } from '../../utils'
 
 export default function Event({params: {eventId}}) {
 
@@ -17,60 +16,26 @@ export default function Event({params: {eventId}}) {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
+            
             setIsLoading(true);
-            const response = await getInfoId(eventId, "events").then((response) => {
+
+            await getInfoId(eventId, "events").then((response) => {
                 setData(response[0]);
             }).catch((errorMessage => {
                 setError(true);
             }));
-            const storiesResponse = await getStoriesType(eventId, "events");
-            setStoriesEvent(storiesResponse);
+
+            await getStoriesType(eventId, "events").then((storiesResponse) => {
+                setStoriesEvent(storiesResponse);
+            });
+            
             setIsLoading(false);
 
         }
 
         fetchData();
     }, [eventId])
-    
-    function parseDate(date){
-      const newDate = new Date(date);
-      return moment(newDate).format("DD/MM/YYYY");
-  }
-
-  function getImg(info){
-      let urlImg = null;
-      if(info.images && info.images[0]){
-          urlImg = info.images[0].path+'.'+info.images[0].extension
-      }else[
-          urlImg = info.thumbnail.path+'.'+info.thumbnail.extension
-      ]
-
-      return urlImg;
-  }
-
-  function getFromUrl(url, type){
-      url = url.split('/');
-      return `/${type}/${url[url.length-1]}`;
-
-  }
-
-  function getCreators(info) {
-      let roles = {};
-      let allCreators = "";
-      info.creators.items.map((creator) => {
-          if(roles[creator.role] && roles[creator.role].length <= 4){
-             roles[creator.role].push(`<a href="${getFromUrl(creator.resourceURI, "creators")}">, ${creator.name}</a>`);
-          }else if(!roles[creator.role]){
-              roles[creator.role] = [`<a href="${getFromUrl(creator.resourceURI, "creators")}">${creator.name}</a>`];
-          }
-      })
-      for(let role in roles) {
-          allCreators += `<li class="role"><strong>${role}: </strong>${roles[role].join('')}</li>`;
-      }
-      
-      return (ReactHtmlParser(allCreators));
-}
 
 
 return (
@@ -96,9 +61,9 @@ return (
             </ul>
             <MoreDetails urls={data.urls} />
             {
-                data.stories.returned > 0 ?
+                storiesEvent ?
                 <div className="stories-container">
-                    <StoriesList info={storiesEvent} />
+                    <StoriesList data={storiesEvent} />
                 </div>:''
             }
         </div>
@@ -107,7 +72,7 @@ return (
     ):(isLoading ? 
         <div className="loading center-loading">
             <InfinitySpin width='250' color="#ff0000ad"/>
-            </div>:(error ? <h2 className='error'>Something went wrong !</h2>:''))
+        </div>:(error ? <h2 className='error'>Something went wrong !</h2>:''))
     }
 </main>)
 }

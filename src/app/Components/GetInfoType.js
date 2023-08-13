@@ -16,7 +16,7 @@ export default function GetCharacterInfo({forType, id, type}) {
 
     useEffect(() => {
         let response = null;
-        async function fetchData() {
+        const fetchData = async () => {
             response = await getByTypeInfoId(forType, id, type);
             setData(response.results);
             setMoreReal(response.total-100)
@@ -26,7 +26,10 @@ export default function GetCharacterInfo({forType, id, type}) {
     }, [forType, id, type])
  
 
-    async function addData(){
+   /**
+    * Add more elements.
+    */
+    const addData = async () => {
         setIsLoading(true);
         setOffset(offset+100);
         const response = await getByTypeInfoId(forType, id, type, offset);
@@ -36,12 +39,22 @@ export default function GetCharacterInfo({forType, id, type}) {
 
     }
 
-    function handleClick(event){
+    /**
+     * 
+     * @param {Event} event 
+     * hide or show the search bar.
+     */
+    const handleClick = (event) => {
         event.preventDefault();
         document.querySelector(`#input-${type}`).classList.toggle("hidden");
     }
 
-    async function handleChange(event) {
+     /**
+   * 
+   * @param {Event} event 
+   * Handle search bar change and update data.
+   */
+    const handleChange = async (event) => {
         let response = null;
         if (event.target.value === "") {
           response = await getByTypeInfoId(forType, id, type);

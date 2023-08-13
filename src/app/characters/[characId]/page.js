@@ -10,8 +10,7 @@ export default function CharactPage({params: {characId}}) {
   const [error, setError] = useState(false);
 
     useEffect(() => {
-
-        async function fetchData() {
+         const fetchData = async () => {
             await getInfoId(characId, "characters").then((data) => {
               setData(data[0]);
             }).catch((errorMessage) => {
@@ -28,7 +27,7 @@ export default function CharactPage({params: {characId}}) {
             data ? (
                 <div>
                     <h1 className="capitalize" style={{textAlign:'center'}}>{data.name}</h1>
-                    <Image className="poster box-shadow-inset" src={data.thumbnail.path+'.'+data.thumbnail.extension} alt="" width={350} height={250} />
+                    <Image className="poster box-shadow-inset" src={data.thumbnail.path+'.'+data.thumbnail.extension} alt="" width={350} height={250} priority/>
                     <p className="description">{data.description}</p>
                         <GetInfoType forType="characters" id={characId} type="comics" />
                         <GetInfoType forType="characters" id={characId} type="series" />

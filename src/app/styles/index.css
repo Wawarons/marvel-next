@@ -34,10 +34,6 @@ ul {
 ::-webkit-scrollbar-thumb:active {
   background: #fa0000;
 }
-::-webkit-scrollbar-track {
-  background: #000;
-  border-radius: 10px;
-}
 
 ::-webkit-scrollbar-corner {
   background: transparent;
@@ -68,6 +64,7 @@ header h1 {
   width: fit-content;
   padding: 5px;
   margin: 0 auto 35px auto;
+  font-size: 3em;
   color: #000;
 }
 
@@ -215,9 +212,6 @@ nav {
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
-.box-shadow-inset:hover:not(h2) {
-  box-shadow: none;
-}
 
 .container-card {
   display: flex;
@@ -239,6 +233,10 @@ nav {
   margin: 15px;
   animation: card-slide 1s;
   transition: .3s;
+}
+
+.card:hover {
+  box-shadow: none;
 }
 
 @media (max-width: 700px) {

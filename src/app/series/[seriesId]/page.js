@@ -9,6 +9,7 @@ import Image from "next/image";
 import MoreDetails from '../../Components/MoreDetails';
 import Card from "../../Components/Card";
 import {MdArrowForwardIos, MdArrowBackIos} from 'react-icons/md';
+import { getCreators, getFromUrl, getImg } from "../../utils";
 
 export default function SeriesInfo({params: {seriesId}}) {
     const [data, setData] = useState();
@@ -17,7 +18,7 @@ export default function SeriesInfo({params: {seriesId}}) {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        async function fetchData(){
+        const fetchData = async () =>{
             setIsLoading(true);
             const response = await getInfoId(seriesId, "series").then((response) => {
                 setData(response[0]);
@@ -31,40 +32,7 @@ export default function SeriesInfo({params: {seriesId}}) {
 
         fetchData();
     }, [seriesId])
-
-    function getFromUrl(url, type){
-        url = url.split('/');
-        return `/${type}/${url[url.length-1]}`;
-    }
-    
-    function getImg(info){
-        let urlImg = null;
-        if(info.images[0]){
-            urlImg = `${info.images[0].path}.${info.images[0].extension}`
-        }else[
-            urlImg = `${info.thumbnail.path}.${info.thumbnail.extension}`
-        ]
-
-        return urlImg;
-    }
-
-    function getCreators(info) {
-        let roles = {};
-        let allCreators = "";
-        info.creators.items.map((creator) => {
-            if(roles[creator.role] && roles[creator.role].length <= 4){
-               roles[creator.role].push(`<a href="${getFromUrl(creator.resourceURI, "creators")}">, ${creator.name}</a>`);
-            }else{
-                roles[creator.role] = [`<a href="${getFromUrl(creator.resourceURI, "creators")}">${creator.name}</a>`];
-            }
-        })
-        for(let role in roles) {
-            allCreators += `<li class="role"><strong>${role}: </strong>${roles[role].join('')}</li>`;
-        }
-        
-        return (ReactHtmlParser(allCreators));
-}
-
+ 
 
 
   return (

@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { InfinitySpin } from "react-loader-spinner";
-import ReactHtmlParser from 'react-html-parser'; 
 import { getInfoId, getStoriesType } from "../../api/getDataApi";
+import { GiBookPile } from 'react-icons/gi';
+import { parseDate, getFromUrl, getCreators } from "../../utils";
+import ReactHtmlParser from 'react-html-parser';
 import GetCharactersPresents from "../../Components/GetCharactersPresents";
 import MoreDetails from '../../Components/MoreDetails';
 import StoriesList from '../../Components/StoriesList';
 import ImagesComic from '../../Components/ImagesComic';
-import {GiBookPile} from 'react-icons/gi';
-import moment from "moment";
 
 export default function ComicInfo({params: {comicId}}) {
     
@@ -19,7 +19,7 @@ export default function ComicInfo({params: {comicId}}) {
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        async function fetchData(){
+        const fetchData = async () => {
             setIsLoading(true);
             const response = await getInfoId(comicId, "comics").then((data) => {
                 setData(data[0]);
@@ -33,35 +33,7 @@ export default function ComicInfo({params: {comicId}}) {
         }
         fetchData();
     }, [comicId])
-
-
-    function parseDate(date){
-        const newDate = new Date(date);
-        return moment(newDate).format("DD/MM/YYYY");
-    }
-
-    function getFromUrl(url, type){
-        url = url.split('/');
-        return `/${type}/${url[url.length-1]}`;
-
-    }
-
-    function getCreators(info) {
-        let roles = {};
-        let allCreators = "";
-        info.creators.items.map((creator, index) => {
-            if(roles[creator.role] && roles[creator.role].length <= 4){
-               roles[creator.role].push(`<a href="${getFromUrl(creator.resourceURI, "creators")}">, ${creator.name}</a>`);
-            }else{
-                roles[creator.role] = [`<a href="${getFromUrl(creator.resourceURI, "creators")}">${creator.name}</a>`];
-            }
-        })
-        for(let role in roles) {
-            allCreators += `<li class="role"><strong>${role}: </strong>${roles[role].join('')}</li>`;
-        }
-        
-        return (ReactHtmlParser(allCreators));
-}
+    
 
 
   return (

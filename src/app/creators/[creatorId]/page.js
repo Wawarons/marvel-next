@@ -9,7 +9,7 @@ export default function CreatorInfo({params: {creatorId}}) {
     const [data, setData] = useState();
     
     useEffect(() => {
-        async function fetchData() {
+        const fetchData = async () => {
             const response = await getInfoId(creatorId, "creators");
             setData(response[0]);
         }
@@ -17,6 +17,7 @@ export default function CreatorInfo({params: {creatorId}}) {
     }, [creatorId])
 
   return (
+    
     <main>
     { data ? 
         (   <>

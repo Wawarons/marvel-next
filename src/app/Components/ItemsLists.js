@@ -50,7 +50,7 @@ export default function ItemsLists({ type }) {
 
   useEffect(() => {
     
-    async function fetchData() {
+    const fetchData = async () =>{
       const response = await getDataByType(type, 0, sortType);
       setData(response);
     }
@@ -59,7 +59,10 @@ export default function ItemsLists({ type }) {
   }, [type, sortType]);
   
 
-  async function addData() {
+  /**
+   * Add more elements.
+   */
+  const addData = async () => {
     setIsLoading(true);
     const response = await getDataByType(type, offset, sortType);
     setMoreDataButton(response.length > 0);
@@ -68,7 +71,13 @@ export default function ItemsLists({ type }) {
     setIsLoading(false);
   }
   
-  async function handleChange(event, type) {
+  /**
+   * 
+   * @param {Event} event 
+   * @param {string} type 
+   * Handle search bar change and update data.
+   */
+  const handleChange = async (event, type) =>  {
     let response = null;
     if (event.target.value === "") {
       response = await getDataByType(type, 0, sortType);
@@ -80,8 +89,10 @@ export default function ItemsLists({ type }) {
     setData(response);
   }
   
-
-  async function getValue() {
+  /**
+   * Update data
+   */
+  const getValue = async () => {
     setIsLoading(true);
     let sort = document.getElementById("sort-type").value;
     let reverseButton = document.getElementById("check-reverse").classList;
@@ -92,13 +103,23 @@ export default function ItemsLists({ type }) {
     setSortType(sort);
   }
   
-  function getReverse(event) {
+  /**
+   * 
+   * @param {Event} event 
+   * Reverse data.
+   */
+  const getReverse = (event) => {
     event.target.classList.toggle("checked");
     event.target.classList.toggle("box-shadow-inset");
     getValue();
   }
 
-  function getOptions(options) {
+  /**
+   * 
+   * @param {Object} options 
+   * @returns get the sorts types. 
+   */
+  const getOptions = (options) => {
     let optionsAll = ''
     for(let value in options){
       if(value != 'defaultValue')
@@ -111,12 +132,12 @@ export default function ItemsLists({ type }) {
   return (
     <main>
     <div className="search-container">
-    {type != 'stories' ?<input name="name" id="search-bar" type="text" maxLength={250} placeholder="Spider-man..." onChange={(event) => handleChange(event, type)} />:''}
+    {type != 'stories' ? <input name="name" id="search-bar" type="text" maxLength={250} placeholder="Spider-man..." onChange={(event) => handleChange(event, type)} />:''}
       <div>
         <select className="box-shadow-inset" name="sort" id="sort-type" onChange={getValue} defaultValue={options[type].defaultValue}>
             {ReactHtmlParser(getOptions(options[type]))}
         </select>
-        <div className="box-shadow-inset" id="check-reverse" onClick={(event)=>{getReverse(event)}}><BsSortDown /></div>
+        <div className="box-shadow-inset" id="check-reverse" onClick={(event)=>{getReverse(event)}} title="descending order"><BsSortDown /></div>
         {isLoading ? <TailSpin height="20" width="20" color="#4fa94d" ariaLabel="tail-spin-loading" radius="1" visible={true} />:''}
         </div>
         </div>

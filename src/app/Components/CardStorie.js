@@ -1,11 +1,16 @@
 import React from 'react'
 import Link from 'next/link'
 import ReactHtmlParser from 'react-html-parser'; 
-
+import { getFromUrl } from '../utils';
 export default function CardStorie({data}) {
 
-    function getComicId(data){
-        return data.comics.items[0] ? data.comics.items[0].resourceURI.split('/').slice(-1):null;
+    /**
+     * 
+     * @param {Object} data 
+     * @returns Get the story's comic. 
+     */
+    const getComicId = (data) => {
+        return data.comics.items[0] ? getFromUrl(data.comics.items[0].resourceURI, "comics"):null;
     }
 
   return (
