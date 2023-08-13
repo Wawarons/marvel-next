@@ -9,7 +9,5 @@ module.exports = {
             hostname: 'i.annihil.us'
           },
         ],
-      },
-      siteUrl: 'https://comi-verse.vercel.app/',
-      generateRobotsTxt: true, 
+      }
 };
